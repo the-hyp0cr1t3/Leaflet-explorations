@@ -6,12 +6,13 @@ import osm from "./osm-providers";
 import { useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
+import { PlottyGeotiffLayer, VectorArrowsGeotiffLayer } from "./GeotiffLayer";
 
 const PolygonMap = () => {
-  const [center, setCenter] = useState({ lat: 24.4539, lng: 54.3773 });
+  const [center, setCenter] = useState({ lat: 21.00247105435674, lng: 88.02250310615936 });
   const [mapLayers, setMapLayers] = useState([]);
 
-  const ZOOM_LEVEL = 12;
+  const ZOOM_LEVEL = 7;
   const mapRef = useRef();
 
   const _onCreate = (e) => {
@@ -56,6 +57,25 @@ const PolygonMap = () => {
     });
   };
 
+  // const windSpeedUrl = "https://stuartmatthews.github.io/leaflet-geotiff/tif/wind_speed.tif";
+  // const windSpeedUrl = "https://drive.google.com/file/d/1YLN1g2zbwqUMvjax7i3z9SCUKVBSDBzJ/view?usp=sharing";
+  // const windSpeedUrl = "https://app.treehealth.care/Web/wind_speed.tif";
+
+  // const windSpeedUrl = "https://drive.google.com/file/d/1a_ZWHE0BAWI4k4jLDDzCaXKUN6mjMoc9/view?usp=sharing";
+  const windSpeedUrl = "https://app.treehealth.care/Web/sample_tiff.tif";
+  // const windSpeedUrl = "./MOS_CZ_KR_250.tif";
+  const windSpeedOptions = {
+    band: 0,
+    bounds: [[21.00247105435674, 88.02250310615936], [17.84283252904803, 92.1313154330292]],
+    displayMin: 0,
+    displayMax: 30,
+    name: "Wind speed",
+    // colorScale: "rainbow",
+    clampLow: false,
+    clampHigh: true
+    //vector:true
+  };
+
   return (
     <>
       <div className="row">
@@ -84,10 +104,17 @@ const PolygonMap = () => {
                 url={osm.maptiler.url}
                 attribution={osm.maptiler.attribution}
               />
+
+              <PlottyGeotiffLayer
+                layerRef={mapRef}
+                url={windSpeedUrl}
+                options={windSpeedOptions}
+              />
+
             </Map>
 
             <h6 align='left'>
-                <pre className="text-left">{JSON.stringify(mapLayers, 0, 2)}</pre>
+              <pre className="text-left">{JSON.stringify(mapLayers, 0, 2)}</pre>
             </h6>
           </div>
         </div>

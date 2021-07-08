@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { Map, TileLayer, FeatureGroup } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import osm from "./osm-providers";
@@ -9,14 +8,12 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import { PlottyGeotiffLayer, VectorArrowsGeotiffLayer } from "./GeotiffLayer";
 
 const PolygonMap = () => {
-  // const [center, setCenter] = useState({ lat: 21.00247105435674, lng: 88.02250310615936 });
   const [center, setCenter] = useState({ lat: 27.171582284054917, lng: 73.81164550781251 });
   const [mapLayers, setMapLayers] = useState([]);
   const [geojsonobj, setGeojsonobj] = useState();
 
   const ZOOM_LEVEL = 7;
   const mapRef = useRef();
-
 
   useEffect(() => {
     var collection = {
@@ -38,7 +35,6 @@ const PolygonMap = () => {
         }
       };
 
-
       var lst = []
       layer.latlngs.forEach(element => {
         const { lat, lng } = element;
@@ -58,14 +54,12 @@ const PolygonMap = () => {
     console.log(e);
 
     const { layerType, layer } = e;
-    // if (layerType === "polygon") {
     const { _leaflet_id } = layer;
 
     setMapLayers((layers) => [
       ...layers,
       { id: _leaflet_id, layerType, latlngs: layer.getLatLngs()[0] },
     ]);
-    // }
   };
 
   const _onEdited = (e) => {
@@ -77,9 +71,8 @@ const PolygonMap = () => {
     Object.values(_layers).map(({ _leaflet_id, editing }) => {
       setMapLayers((layers) =>
         layers.map((l) =>
-          l.id === _leaflet_id
-            ? { ...l, latlngs: { ...editing.latlngs[0] } }
-            : l
+          l.id === _leaflet_id ? { ...l, latlngs: { ...editing.latlngs[0] } } :
+          l
         )
       );
     });
@@ -96,25 +89,19 @@ const PolygonMap = () => {
     });
   };
 
-  // const windSpeedUrl = "https://stuartmatthews.github.io/leaflet-geotiff/tif/wind_speed.tif";
-  // const windSpeedUrl = "https://drive.google.com/file/d/1YLN1g2zbwqUMvjax7i3z9SCUKVBSDBzJ/view?usp=sharing";
-  // const windSpeedUrl = "https://app.treehealth.care/Web/wind_speed.tif";
-
-  // const windSpeedUrl = "https://drive.google.com/file/d/1a_ZWHE0BAWI4k4jLDDzCaXKUN6mjMoc9/view?usp=sharing";
-  const windSpeedUrl = "https://app.treehealth.care/Web/sample_tiff.tif";
-  // const windSpeedUrl = "./MOS_CZ_KR_250.tif";
-  const windSpeedOptions = {
+  const tiffUrl = "";
+  const tiffOptions = {
     band: 0,
-    bounds: [[27.171582284054917, 73.81164550781251], [30.642638258763288, 79.49707031250001]],
-    // bounds: [[21.00247105435674, 88.02250310615936], [17.84283252904803, 92.1313154330292]],
+    bounds: [
+      [27.171582284054917, 73.81164550781251],
+      [30.642638258763288, 79.49707031250001]
+    ],
     displayMin: 0,
     displayMax: 30,
     name: "Wind speed",
     colorScale: "rainbow",
-    // colorScale: "greys",
     clampLow: false,
     clampHigh: true
-    //vector:true
   };
 
   const imageId = '24052477'
@@ -123,8 +110,7 @@ const PolygonMap = () => {
   const imageTilesURL = `https://api.spectator.earth/imagery/${imageId}/tiles/{z}/{x}/{y}/?bands_formula=${bandsFormula}&api_key=${apiKey}`;
 
   return (
-    <>
-      <div className="row">
+    <div className="row">
         <div className="col text-center">
           <h2>React-leaflet - Create, edit and delete polygon on map</h2>
 
@@ -156,20 +142,18 @@ const PolygonMap = () => {
               />
               <PlottyGeotiffLayer
                 layerRef={mapRef}
-                url={windSpeedUrl}
-                options={windSpeedOptions}
+                url={tiffUrl}
+                options={tiffOptions}
               />
 
             </Map>
 
             <h6 align='left'>
-              {/* <pre className="text-left">{JSON.stringify(mapLayers, 0, 2)}</pre> */}
               <pre className="text-left">{JSON.stringify(geojsonobj, 0, 2)}</pre>
             </h6>
           </div>
         </div>
-      </div>
-    </>
+    </div>
   );
 };
 
